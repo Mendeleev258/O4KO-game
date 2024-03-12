@@ -3,6 +3,7 @@
 
 template<typename T, typename Predicat>
 void validation(T& x, Predicat condition, const char* message);
+void print_issue(int res, int& player_score, int& opponent_score);
 int exit();
 
 
@@ -11,6 +12,7 @@ int main()
 	setlocale(LC_ALL, "Russian");
 	srand(time(NULL));
 	short choice;
+	int player_score{}, opponent_score{};
 	do
 	{
 		int sum{};
@@ -41,22 +43,26 @@ int main()
 			if (sum == 21)
 				std::cout << "ОЧКО!!!\n";
 
+			short res;
+
 			if ((sum <= 21 && opponent <= 21) || (sum >= 21 && opponent >= 21))
 			{
 				if (abs(21 - sum) < abs(21 - opponent))
-					std::cout << "Вы выиграли!\n";
+					res = 1;
 				if (abs(21 - sum) > abs(21 - opponent))
-					std::cout << "Вы проиграли!\n";
+					res = 0;
 			}
 			else
 			{
 				if (sum < 21)
-					std::cout << "Вы выиграли!\n";
-				else std::cout << "Вы проиграли!\n";
+					res = 1;
+				else res = 0;
 			}
 			if (sum == opponent)
-				std::cout << "Ничья\n";
+				res = -1;
 
+			print_issue(res, player_score, opponent_score);
+			std::cout << "\nСчёт " << player_score << " : " << opponent_score << '\n';
 			choice = exit();
 		}
 		
@@ -76,6 +82,25 @@ void validation(T& x, Predicat condition, const char* message)
 		std::cout << message << "\n>>> ";
 	}
 }
+
+void print_issue(int res, int& player_score, int& opponent_score)
+{
+	switch (res)
+	{
+	case 0:
+		std::cout << "Вы проиграли!\n";
+		opponent_score++;
+		break;
+	case 1:
+		std::cout << "Вы выиграли!\n";
+		player_score++;
+		break;
+	default:
+		std::cout << "Ничья\n";
+		break;
+	}
+}
+
 
 int exit()
 {
